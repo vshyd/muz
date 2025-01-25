@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint
-from ..extensions import db
+from ...extensions import db
 from sqlalchemy import text
 
 

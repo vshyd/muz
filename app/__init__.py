@@ -1,8 +1,8 @@
 from flask import Flask, session
 from .extensions import db
-from .main import main_bp
-from .admin import admin_bp
-from .auth import auth_bp
+from .blueprints.main import main_bp
+from .blueprints.admin import admin_bp
+from .blueprints.auth import auth_bp
 
 def create_app():
     app = Flask(__name__)
@@ -29,5 +29,3 @@ def create_app():
         return {'current_user': user}
 
     return app
-
-

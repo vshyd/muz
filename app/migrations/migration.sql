@@ -16,7 +16,7 @@ CREATE TABLE Artysta (
 
 CREATE TABLE Eksponat (
     id int  NOT NULL,
-    tytul varchar(20)  NOT NULL,
+    tytul varchar(50)  NOT NULL,
     artysta_id int  NOT NULL,
     status_wyp boolean  NOT NULL,
     wysokosc decimal(100,2)  NOT NULL CHECK (wysokosc > 0),
@@ -37,14 +37,14 @@ CREATE TABLE Historia (
 
 CREATE TABLE Instytucja (
     id int  NOT NULL,
-    nazwa varchar(20)  NOT NULL,
-    miasto varchar(15)  NOT NULL,
+    nazwa varchar(50)  NOT NULL,
+    miasto varchar(20)  NOT NULL,
     CONSTRAINT Instytucja_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE Sala (
     id int  NOT NULL,
-    nazwa_galerii varchar(15)  NOT NULL,
+    nazwa_galerii varchar(50)  NOT NULL,
     CONSTRAINT Sala_pk PRIMARY KEY (id)
 );
 

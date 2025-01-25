@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint, session, redirect, request, url_for
-from ..extensions import db
+from ...extensions import db
 from sqlalchemy import text
 
 

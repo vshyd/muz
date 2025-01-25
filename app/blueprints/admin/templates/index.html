@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Admin Page</h2>
+    <h1>Our Artists:</h1>
+    <ul>
+        {% for artist in artists %}
+            <li>{{ artist }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
