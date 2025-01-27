@@ -11,4 +11,11 @@ admin_service = AdminService()
 @admin_bp.route('/')
 def index():
     artists = admin_service.get_artists()
-    return render_template('index.html', artists=artists)
+    exponats = admin_service.get_exponats()
+    exhibition_rooms = admin_service.get_exbition_rooms()
+    institutions = admin_service.get_instutions()
+    return render_template('index.html',
+                            artists=artists,
+                            exponats=exponats,
+                            exhibition_rooms=exhibition_rooms,
+                            institutions=institutions)

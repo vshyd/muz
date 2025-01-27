@@ -2,10 +2,32 @@
 
 {% block content %}
     <h2>Admin Page</h2>
+
     <h1>Our Artists:</h1>
     <ul>
         {% for artist in artists %}
             <li>{{ artist }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Our Exponats:</h1>
+    <ul>
+        {% for exponat in exponats %}
+            <li>{{ exponat }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Our Exhibition Rooms:</h1>
+    <ul>
+        {% for exhibition_room in exhibition_rooms %}
+            <li>{{ exhibition_room }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Our Partner Institutions:</h1>
+    <ul>
+        {% for institution in institutions %}
+            <li>{{ institution }}</li>
         {% endfor %}
     </ul>
 {% endblock %}

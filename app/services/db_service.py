@@ -6,11 +6,68 @@ class DBService:
     def __init__(self) -> None:
         self.db = db
         self.artist_table = 'Artysta'
+        self.exponat_table = 'Eksponat'
+        self.exhibition_room_table = 'Sala'
+        self.institution_table = 'Instytucja'
 
     
     def get_all_artists(self) -> dict:
-        SQL = text(f"select * from {self.artist_table}")
+        SQL = text(f"""
+                SELECT
+                    id,
+                    imie_nazwisko,
+                    data_urodzenia, 
+                    data_smierci 
+                FROM {self.artist_table}
+                """)
         res = self.db.session.execute(SQL)
         artists = [row._mapping for row in res]
+
         return {"artists":artists}
+    
+
+    def get_all_exponats(self) -> dict:
+        SQL = text(f"""
+                SELECT
+                    id, 
+                    tytul, 
+                    artysta_id,
+                    status_wyp,
+                    wysokosc, 
+                    szerokosc,
+                    waga
+                FROM {self.exponat_table}
+                """)
+        res = self.db.session.execute(SQL)
+        exponats = [row._mapping for row in res]
+        return {"exponats":exponats}
+    
+
+    def get_all_exhibition_rooms(self) -> dict:
+        SQL = text(f"""
+                SELECT
+                    id, 
+                    nazwa_galerii
+                FROM {self.exhibition_room_table}
+                """)
+        res = self.db.session.execute(SQL)
+        exhibition_rooms = [row._mapping for row in res]
+        return {"exhibition_rooms":exhibition_rooms}
+    
+
+    def get_all_institutions(self) -> dict:
+        SQL = text(f"""
+                SELECT
+                    id,
+                    nazwa,
+                    miasto
+                FROM {self.institution_table}
+                """)
+        res = self.db.session.execute(SQL)
+        institutions = [row._mapping for row in res]
+        return {"institutions":institutions}
+    
+
+
+
     
