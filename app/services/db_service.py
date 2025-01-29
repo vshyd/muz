@@ -67,6 +67,14 @@ class DBService:
         return institutions
     
 
+    def assign_exponat_to_gallery(self, query_params:dict):
+        SQL = text(f"""
+            INSERT INTO Historia (id, eksponat_id, sala_id, instytucja_id, data_pocz, data_kon)
+            VALUES (:id, :eksponat_id, :sala_id, :instytucja_id, :data_pocz, :data_kon)
+            """)
+        self.db.session.execute(SQL, query_params)
+        self.db.session.commit()
+        #think about workaround here. 
 
 
     

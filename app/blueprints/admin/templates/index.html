@@ -19,6 +19,8 @@
         <button class="tab-button" onclick="openTab(event, 'institutions')">Partner Institutions</button>
     </div>
 
+    <div id="success-message", class="success-message"></div>
+
     <!-- Artists tab -->
     <div id="artists" class="tab-content">
         <h1>Our Artists:</h1>
@@ -42,12 +44,11 @@
         <ul>
             {% for exponat in exponats %}
                 <li>
-                    {{exponat.tytul}} 
+                    {{exponat.tytul}}
                 </li>
             {% endfor %}
         </ul>
     </div>
-
 
     <div id="exhibition_rooms" class="tab-content" style="display: none;">
         <h1>Our Exhibition Rooms:</h1>
@@ -56,6 +57,7 @@
                 <li>
                     {{room.nazwa_galerii}} 
                     <button onclick="editRoom({{room|safe}})">Edit</button>
+                    <button onclick="openModal({{room.id}}, '{{room.nazwa_galerii}}')">Assign Exponat</button>
                 </li>
             {% endfor %}
         </ul>
@@ -103,6 +105,14 @@
                 <button type="submit">Save</button>
             </form>
         </div>
+    </div>
+
+    <div id="assignModal" class="assignModal">
+        <h2 id="modal-title"></h2>
+        <label for="exponat-select">Select an Exponat:</label>
+        <select id="exponat-select"></select>
+        <button onclick="assignExponat()">Assign</button>
+        <button onclick="closeModal('assignModal')">Close</button>
     </div>
 
 

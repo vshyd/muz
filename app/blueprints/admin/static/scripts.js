@@ -1,5 +1,16 @@
 // scripts.js
 
+
+function display_message(message) {
+    const successMessage = document.getElementById("success-message");
+    successMessage.style.display = "block";
+    successMessage.textContent = message;
+    setTimeout(() => {
+        successMessage.style.display = "none";
+    }, 3000);
+
+}
+
 function openTab(event, tabId) {
     var tabContents = document.getElementsByClassName("tab-content");
     for (var i = 0; i < tabContents.length; i++) {
@@ -52,8 +63,6 @@ function saveChangesRoom(event) {
     const formData = new FormData(form);
     const updatedData = Object.fromEntries(formData.entries());
 
-    console.log("Updated artist data:", updatedData);
-
     closeModal('editRoomModal');
 }
 
@@ -65,4 +74,55 @@ function editRoom(room) {
 
     document.getElementById("roomId").value = room.id;
     document.getElementById("room_name").value = room.nazwa_galerii;
+}
+
+
+async function openModal(galleryId, galleryName) {
+    selectedGalleryId = galleryId;
+
+    document.getElementById("modal-title").innerText = `Assign Exponat to ${galleryName}`;
+    document.getElementById("assignModal").style.display = "block";
+
+    // Fetch exponats and populate dropdown
+    try {
+        const response = await fetch('/admin/get_exponats');
+        const exponats = await response.json();
+        const select = document.getElementById("exponat-select");
+        select.innerHTML = "";
+
+        exponats.forEach(exponat => {
+            const option = document.createElement("option");
+            option.value = exponat.id;
+            option.textContent = exponat.tytul;
+            select.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error("Error fetching exponats:", error);
+    }
+}
+
+
+async function assignExponat() {
+    const exponatId = document.getElementById("exponat-select").value;
+
+    try {
+        const response = await fetch('/admin/assign_exponat', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                gallery_id: selectedGalleryId,
+                exponat_id: parseInt(exponatId)
+            })
+        });
+
+        const data = await response.json();
+        display_message(data.message)
+        
+        closeModal('assignModal');
+    } catch (error) {
+        console.error("Error assigning exponat:", error);
+    }
 }

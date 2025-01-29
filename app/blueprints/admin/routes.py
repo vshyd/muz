@@ -1,4 +1,4 @@
-from flask import jsonify, url_for, render_template, Blueprint
+from flask import jsonify, request, url_for, render_template, Blueprint
 
 from .service import AdminService
 from ...extensions import db
@@ -19,3 +19,15 @@ def index():
                             exponats=exponats,
                             exhibition_rooms=exhibition_rooms,
                             institutions=institutions)
+
+
+@admin_bp.route('/get_exponats')
+def get_exponats():
+    return jsonify([dict(exponat) for exponat in admin_service.get_exponats()])
+
+
+@admin_bp.route('/assign_exponat', methods=['POST'])
+def assign_exponats():
+    data = request.json
+    response = admin_service.assign_exponat_to_gallery(data)
+    return response

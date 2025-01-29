@@ -1,5 +1,6 @@
 from ...services.db_service import DBService
-
+import random
+import datetime
 
 class AdminService:
 
@@ -31,4 +32,30 @@ class AdminService:
 
     def get_instutions(self) -> list:
         return self.db_service.get_all_institutions()
+    
+
+    def assign_exponat_to_gallery(self, data:dict) -> dict:
+        gallery_id = data['gallery_id']
+        exponat_id = data['exponat_id']
+        
+        params = {
+            "id": random.randint(0, 100000),
+            "eksponat_id":exponat_id,
+            "sala_id":gallery_id,
+            "instytucja_id":None,
+            "data_pocz": datetime.datetime.today().strftime('%Y-%m-%d'),
+            "data_kon":None
+        }
+        message = None
+        try:
+            self.db_service.assign_exponat_to_gallery(params)
+            message = "Exponat was assigned successfuly"
+        except Exception as e:
+            message = str(e)
+            print(message)
+        
+        return {'message':message}
+
+        
+
     
