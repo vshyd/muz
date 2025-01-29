@@ -8,19 +8,6 @@ main_bp = Blueprint('main', import_name=__name__, template_folder='./templates',
 
 @main_bp.route('/')
 def index():
-    print('hello')
-    return render_template('home.html', year=2025)
-
-@main_bp.route('/about')
-def about():
-    return render_template('home.html', year=2025)
-
-@main_bp.route('/exhibits')
-def exhibits():
-    return render_template('home.html', year=2025)
-
-@main_bp.route('/contact')
-def contact():
     return render_template('home.html', year=2025)
 
 @main_bp.route('/artists')

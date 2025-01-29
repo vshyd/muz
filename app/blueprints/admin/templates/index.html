@@ -1,33 +1,110 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='styles.css') }}">
+    </head>
     <h2>Admin Page</h2>
 
-    <h1>Our Artists:</h1>
-    <ul>
-        {% for artist in artists %}
-            <li>{{ artist }}</li>
-        {% endfor %}
-    </ul>
+    <!-- Tab navigation -->
+    <div class="tabs">
+        <button class="tab-button" onclick="openTab(event, 'artists')">Artists</button>
+        <button class="tab-button" onclick="openTab(event, 'exponats')">Exponats</button>
+        <button class="tab-button" onclick="openTab(event, 'exhibition_rooms')">Exhibition Rooms</button>
+        <button class="tab-button" onclick="openTab(event, 'institutions')">Partner Institutions</button>
+    </div>
 
-    <h1>Our Exponats:</h1>
-    <ul>
-        {% for exponat in exponats %}
-            <li>{{ exponat }}</li>
-        {% endfor %}
-    </ul>
+    <!-- Artists tab -->
+    <div id="artists" class="tab-content">
+        <h1>Our Artists:</h1>
+        <ul>
+            {% for artist in artists %}
+                <li>
+                    {{artist.imie_nazwisko}} 
+                    ({{artist.data_urodzenia}} - 
+                    {{artist.data_smierci if artist.data_smierci else "Present" }})
+                    
+                    <!-- Edit button -->
+                    <button onclick="editArtist({{artist|safe}})">Edit</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <h1>Our Exhibition Rooms:</h1>
-    <ul>
-        {% for exhibition_room in exhibition_rooms %}
-            <li>{{ exhibition_room }}</li>
-        {% endfor %}
-    </ul>
 
-    <h1>Our Partner Institutions:</h1>
-    <ul>
-        {% for institution in institutions %}
-            <li>{{ institution }}</li>
-        {% endfor %}
-    </ul>
+    <div id="exponats" class="tab-content" style="display: none;">
+        <h1>Our Exponats:</h1>
+        <ul>
+            {% for exponat in exponats %}
+                <li>
+                    {{exponat.tytul}} 
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <div id="exhibition_rooms" class="tab-content" style="display: none;">
+        <h1>Our Exhibition Rooms:</h1>
+        <ul>
+            {% for room in exhibition_rooms %}
+                <li>
+                    {{room.nazwa_galerii}} 
+                    <button onclick="editRoom({{room|safe}})">Edit</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <div id="institutions" class="tab-content" style="display: none;">
+        <h1>Our Partner Institutions:</h1>
+        <ul>
+            {% for institution in institutions %}
+                <li>
+                    {{institution.nazwa}} - {{institution.miasto}}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editModal')">&times;</span>
+            <h2>Edit Artist</h2>
+            <form id="editForm" onsubmit="saveChangesArtist(event)">
+                <input type="hidden" id="artistId" name="id">
+                <label for="imie_nazwisko">Name:</label>
+                <input type="text" id="imie_nazwisko" name="imie_nazwisko" required>
+                <label for="data_urodzenia">Birth Date:</label>
+                <input type="date" id="data_urodzenia" name="data_urodzenia" required>
+                <label for="data_smierci">Death Date:</label>
+                <input type="date" id="data_smierci" name="data_smierci">
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editRoomModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editRoomModal')">&times;</span>
+            <h2>Edit Room</h2>
+            <form id="editRoomForm" onsubmit="saveChangesRoom(event)">
+                <input type="hidden" id="roomId" name="id">
+                <label for="room_name">Room Name:</label>
+                <input type="text" id="room_name" name="nazwa_galerii" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="{{ url_for('admin.static', filename='scripts.js') }}"></script>
 {% endblock %}

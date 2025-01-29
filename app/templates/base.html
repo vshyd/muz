@@ -11,27 +11,20 @@
     <header>
         <nav class="navbar">
             <div class="navbar-container">
-                <!-- Логотип -->
                 <a href="{{ url_for('main.index') }}" class="logo">Museum</a>
                 
-                <!-- Навигационные ссылки -->
                 <ul class="nav-links">
                     <li><a href="{{ url_for('main.index') }}" class="{% if request.path == url_for('main.index') %}active{% endif %}">Home</a></li>
-                    <li><a href="{{ url_for('main.about') }}" class="{% if request.path == url_for('main.about') %}active{% endif %}">About</a></li>
-                    <li><a href="{{ url_for('main.exhibits') }}" class="{% if request.path == url_for('main.exhibits') %}active{% endif %}">Exhibits</a></li>
-                    <li><a href="{{ url_for('main.contact') }}" class="{% if request.path == url_for('main.contact') %}active{% endif %}">Contact</a></li>
                     <li><a href="{{ url_for('main.artists') }}" class="{% if request.path == url_for('main.artists') %}active{% endif %}">Artists</a></li>
                     <li><a href="{{ url_for('admin.index') }}" class="{% if request.path == url_for('admin.index') %}active{% endif %}">Admin</a></li>
                 </ul>
                 
-                <!-- Секция логина -->
                 <div class="auth-links">
                     {% if current_user %}
                         <span>Welcome, {{ current_user.username }}</span>
                         <a href="{{ url_for('auth.logout') }}" class="btn logout">Logout</a>
                     {% else %}
                         <a href="{{ url_for('auth.login') }}" class="btn login">Login</a>
-                        <a href="{{ url_for('auth.register') }}" class="btn register">Register</a>
                     {% endif %}
                 </div>
             </div>

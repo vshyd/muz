@@ -11,7 +11,7 @@ class DBService:
         self.institution_table = 'Instytucja'
 
     
-    def get_all_artists(self) -> dict:
+    def get_all_artists(self) -> list:
         SQL = text(f"""
                 SELECT
                     id,
@@ -22,11 +22,10 @@ class DBService:
                 """)
         res = self.db.session.execute(SQL)
         artists = [row._mapping for row in res]
-
-        return {"artists":artists}
+        return artists
     
 
-    def get_all_exponats(self) -> dict:
+    def get_all_exponats(self) -> list:
         SQL = text(f"""
                 SELECT
                     id, 
@@ -40,10 +39,10 @@ class DBService:
                 """)
         res = self.db.session.execute(SQL)
         exponats = [row._mapping for row in res]
-        return {"exponats":exponats}
+        return exponats
     
 
-    def get_all_exhibition_rooms(self) -> dict:
+    def get_all_exhibition_rooms(self) -> list:
         SQL = text(f"""
                 SELECT
                     id, 
@@ -52,10 +51,10 @@ class DBService:
                 """)
         res = self.db.session.execute(SQL)
         exhibition_rooms = [row._mapping for row in res]
-        return {"exhibition_rooms":exhibition_rooms}
+        return exhibition_rooms
     
 
-    def get_all_institutions(self) -> dict:
+    def get_all_institutions(self) -> list:
         SQL = text(f"""
                 SELECT
                     id,
@@ -65,7 +64,7 @@ class DBService:
                 """)
         res = self.db.session.execute(SQL)
         institutions = [row._mapping for row in res]
-        return {"institutions":institutions}
+        return institutions
     
 
 

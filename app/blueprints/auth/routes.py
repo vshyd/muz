@@ -6,7 +6,7 @@ from sqlalchemy import text
 auth_bp = Blueprint('auth', import_name=__name__, template_folder='./templates', static_folder='./static')
 
 users = {
-    'testuser': {'id': 1, 'username': 'testuser', 'password': 'password123'}
+    'admin': {'id': 1, 'username': 'admin', 'password': 'admin'}
 }
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -15,7 +15,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = users.get(username)
-
         if user and user['password'] == password:
             session['user_id'] = user['id']
             session['username'] = user['username']
@@ -28,10 +27,4 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('main.index'))
-
-
-@auth_bp.route('/register')
-def register():
-    pass
-
 

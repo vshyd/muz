@@ -5,7 +5,7 @@ from ...extensions import db
 from sqlalchemy import text
 
 
-admin_bp = Blueprint('admin', url_prefix='/admin', import_name=__name__, template_folder='./templates')
+admin_bp = Blueprint('admin', url_prefix='/admin', import_name=__name__, template_folder='./templates', static_folder='./static')
 admin_service = AdminService()
 
 @admin_bp.route('/')
