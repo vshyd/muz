@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS Sala;
 	
 
 CREATE TABLE Artysta (
-    id int  NOT NULL,
+    id SERIAL  NOT NULL,
     imie_nazwisko varchar(30)  NOT NULL,
     data_urodzenia date  NULL  CHECK (data_urodzenia IS NULL OR data_urodzenia > '0001-01-01'),
     data_smierci date  NULL  CHECK (data_smierci IS NULL OR data_smierci > data_urodzenia),
@@ -15,7 +15,7 @@ CREATE TABLE Artysta (
 );
 
 CREATE TABLE Eksponat (
-    id int  NOT NULL,
+    id SERIAL  NOT NULL,
     tytul varchar(50)  NOT NULL,
     artysta_id int  NOT NULL,
     status_wyp boolean  NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Eksponat (
 );
 
 CREATE TABLE Historia (
-    id int  NOT NULL,
+    id SERIAL  NOT NULL,
     eksponat_id int  NOT NULL,
     sala_id int  NULL,
     instytucja_id int  NULL,
@@ -36,14 +36,14 @@ CREATE TABLE Historia (
 );
 
 CREATE TABLE Instytucja (
-    id int  NOT NULL,
+    id SERIAL  NOT NULL,
     nazwa varchar(50)  NOT NULL,
     miasto varchar(20)  NOT NULL,
     CONSTRAINT Instytucja_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE Sala (
-    id int  NOT NULL,
+    id SERIAL  NOT NULL,
     nazwa_galerii varchar(50)  NOT NULL,
     CONSTRAINT Sala_pk PRIMARY KEY (id)
 );
@@ -90,51 +90,3 @@ CREATE TRIGGER trig_sprawdz_dni_poza_muzeum
 BEFORE INSERT OR UPDATE ON Historia
 FOR EACH ROW
 EXECUTE FUNCTION sprawdz_dni_poza_muzeum();
-
-CREATE OR REPLACE FUNCTION sprawdz_eksponaty_artysty() 
-RETURNS TRIGGER AS
-$$
-DECLARE
-    liczba_eksponatow INT;
-BEGIN
-    SELECT COUNT(*)
-    INTO liczba_eksponatow
-    FROM Eksponat
-    WHERE artysta_id = (SELECT artysta_id FROM Eksponat WHERE id = NEW.eksponat_id)
-    AND status_wyp = FALSE;
-
-    IF liczba_eksponatow = 1 THEN
-        RAISE EXCEPTION 'Muzeum ma teraz tylko jeden eksponat tego artysty. Wypożyczenie jest niemożliwe.';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trig_sprawdz_eksponat_artysty
-BEFORE INSERT OR UPDATE ON Historia
-FOR EACH ROW 
-EXECUTE FUNCTION sprawdz_eksponaty_artysty();
-
-CREATE OR REPLACE FUNCTION zaktual_status_eksponatu() 
-RETURNS TRIGGER AS
-$$
-BEGIN
-    IF NEW.data_kon IS NULL THEN
-        UPDATE Eksponat
-        SET status_wyp = TRUE
-        WHERE id = NEW.eksponat_id;
-    ELSE
-        UPDATE Eksponat
-        SET status_wyp = FALSE
-        WHERE id = NEW.eksponat_id;
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trig_zaktual_status_eksponatu
-AFTER INSERT OR UPDATE ON Historia
-FOR EACH ROW 
-EXECUTE FUNCTION zaktual_status_eksponatu();

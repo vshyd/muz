@@ -69,12 +69,26 @@ class DBService:
 
     def assign_exponat_to_gallery(self, query_params:dict):
         SQL = text(f"""
-            INSERT INTO Historia (id, eksponat_id, sala_id, instytucja_id, data_pocz, data_kon)
-            VALUES (:id, :eksponat_id, :sala_id, :instytucja_id, :data_pocz, :data_kon)
-            """)
+                INSERT INTO Historia (eksponat_id, sala_id, instytucja_id, data_pocz, data_kon)
+                VALUES (:eksponat_id, :sala_id, :instytucja_id, :data_pocz, :data_kon)
+                """)
         self.db.session.execute(SQL, query_params)
         self.db.session.commit()
-        #think about workaround here. 
 
 
-    
+    def save_new_artist(self, query_params:dict):
+        SQL = text(f"""
+                INSERT INTO Artysta (imie_nazwisko, data_urodzenia, data_smierci)
+                VALUES (:imie_nazwisko, :data_urodzenia, :data_smierci)
+                """)
+        self.db.session.execute(SQL, query_params)
+        self.db.session.commit()
+
+
+    def save_new_institution(self, query_params:dict):
+        SQL = text(f"""
+                INSERT INTO Instytucja (nazwa, miasto)
+                VALUES (:nazwa, :miasto)
+                """)
+        self.db.session.execute(SQL, query_params)
+        self.db.session.commit()

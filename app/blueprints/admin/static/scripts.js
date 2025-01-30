@@ -35,6 +35,35 @@ function editArtist(artist) {
     document.getElementById("data_smierci").value = artist.data_smierci || '';
 }
 
+async function saveArtist(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("addArtistForm");
+    const formData = new FormData(form);
+    dataArtist = Object.fromEntries(formData.entries());
+
+    try {
+        const response = await fetch('/admin/save_new_artist', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                artist: dataArtist
+            })
+        });
+
+        const data = await response.json();
+        display_message(data.message)
+        closeModal('addArtistModal');
+        location.reload()
+    } catch (error) {
+        console.error("Error Adding new Artist:", error);
+    }
+
+    
+}
+
 
 function closeModal(id) {
     const modal = document.getElementById(id);
@@ -48,9 +77,6 @@ function saveChangesArtist(event) {
     const form = document.getElementById("editForm");
     const formData = new FormData(form);
     const updatedData = Object.fromEntries(formData.entries());
-
-    console.log("Updated artist data:", updatedData);
-
     
     closeModal('editModal');
 }
@@ -96,7 +122,7 @@ async function openModal(galleryId, galleryName) {
             option.textContent = exponat.tytul;
             select.appendChild(option);
         });
-        
+
     } catch (error) {
         console.error("Error fetching exponats:", error);
     }
@@ -124,5 +150,39 @@ async function assignExponat() {
         closeModal('assignModal');
     } catch (error) {
         console.error("Error assigning exponat:", error);
+    }
+}
+
+
+function displayAddModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "block";
+}
+
+
+async function saveInstitution(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("addInstitutionForm");
+    const formData = new FormData(form);
+    dataInstitution = Object.fromEntries(formData.entries());
+
+    try {
+        const response = await fetch('/admin/save_new_institution', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                institution: dataInstitution
+            })
+        });
+
+        const data = await response.json();
+        display_message(data.message)
+        closeModal('addInstitutionModal');
+        location.reload()
+    } catch (error) {
+        console.error("Error Adding new Institution:", error);
     }
 }

@@ -39,7 +39,6 @@ class AdminService:
         exponat_id = data['exponat_id']
         
         params = {
-            "id": random.randint(0, 100000),
             "eksponat_id":exponat_id,
             "sala_id":gallery_id,
             "instytucja_id":None,
@@ -55,6 +54,48 @@ class AdminService:
             print(message)
         
         return {'message':message}
+    
+
+    def save_new_artist(self, data:dict) -> dict:
+        artist_data = data['artist']
+        params = {"imie_nazwisko":artist_data['imie_nazwisko'],
+                  "data_urodzenia":self._replace_empty_string_with_none(artist_data['data_urodzenia']),
+                  "data_smierci":self._replace_empty_string_with_none(artist_data['data_smierci'])
+                 }
+        message = None
+        try:
+            self.db_service.save_new_artist(params)
+            message = "Artist was added successfuly"
+        except Exception as e:
+            message = str(e)
+            print(message)
+
+        return {'message':message}
+    
+
+    def save_new_institution(self, data:dict) -> dict:
+        institution_data = data['institution']
+        params = {"nazwa": institution_data['nazwa'],
+                  "miasto": institution_data['miasto']
+                 }
+        message = None
+        try:
+            self.db_service.save_new_institution(params)
+            message = "Institution was added successfuly"
+        except Exception as e:
+            message = str(e)
+            print(message)
+
+        return {'message':message}
+    
+    
+
+
+    def _replace_empty_string_with_none(self, value:str):
+        return value if value else None
+        
+
+
 
         
 

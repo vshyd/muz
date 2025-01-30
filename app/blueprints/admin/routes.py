@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import jsonify, request, url_for, render_template, Blueprint
 
 from .service import AdminService
@@ -30,4 +31,18 @@ def get_exponats():
 def assign_exponats():
     data = request.json
     response = admin_service.assign_exponat_to_gallery(data)
+    return response
+
+
+@admin_bp.route('/save_new_artist', methods=['POST'])
+def save_new_artist():
+    data = request.json
+    response = admin_service.save_new_artist(data)
+    return response
+
+
+@admin_bp.route('/save_new_institution', methods=['POST'])
+def save_new_institution():
+    data = request.json
+    response = admin_service.save_new_institution(data)
     return response

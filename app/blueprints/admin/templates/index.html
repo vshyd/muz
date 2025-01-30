@@ -28,13 +28,14 @@
             {% for artist in artists %}
                 <li>
                     {{artist.imie_nazwisko}} 
-                    ({{artist.data_urodzenia}} - 
+                    ({{artist.data_urodzenia if artist.data_urodzenia else "Unknown"}} - 
                     {{artist.data_smierci if artist.data_smierci else "Present" }})
                     
                     <!-- Edit button -->
                     <button onclick="editArtist({{artist|safe}})">Edit</button>
                 </li>
             {% endfor %}
+            <button onclick="displayAddModal('addArtistModal')">Add Artist</button>
         </ul>
     </div>
 
@@ -72,10 +73,11 @@
                     {{institution.nazwa}} - {{institution.miasto}}
                 </li>
             {% endfor %}
+            <button onclick="displayAddModal('addInstitutionModal')">Add Institution</button>
         </ul>
     </div>
 
-
+    <!-- edit artist modal -->
     <div id="editModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">&times;</span>
@@ -93,6 +95,24 @@
         </div>
     </div>
 
+
+    <div id="addArtistModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addArtistModal')">&times;</span>
+            <h2>Add Artist</h2>
+            <form id="addArtistForm" onsubmit="saveArtist(event)">
+                <input type="hidden" id="artistId" name="id">
+                <label for="imie_nazwisko">Name:</label>
+                <input type="text" id="imie_nazwisko" name="imie_nazwisko" required>
+                <label for="data_urodzenia">Birth Date:</label>
+                <input type="date" id="data_urodzenia" name="data_urodzenia">
+                <label for="data_smierci">Death Date:</label>
+                <input type="date" id="data_smierci" name="data_smierci">
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    
     <div id="editRoomModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal('editRoomModal')">&times;</span>
@@ -113,6 +133,21 @@
         <select id="exponat-select"></select>
         <button onclick="assignExponat()">Assign</button>
         <button onclick="closeModal('assignModal')">Close</button>
+    </div>
+
+    <div id="addInstitutionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addInstitutionModal')">&times;</span>
+            <h2>Add Institution</h2>
+            <form id="addInstitutionForm" onsubmit="saveInstitution(event)">
+                <input type="hidden" id="artistId" name="id">
+                <label for="nazwa">Name:</label>
+                <input type="text" id="nazwa" name="nazwa" required>
+                <label for="miasto">City:</label>
+                <input type="text" id="miasto" name="miasto" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
     </div>
 
 
