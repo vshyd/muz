@@ -14,9 +14,10 @@
     <!-- Tab navigation -->
     <div class="tabs">
         <button class="tab-button" onclick="openTab(event, 'artists')">Artists</button>
-        <button class="tab-button" onclick="openTab(event, 'exponats')">Exponats</button>
+        <button class="tab-button" onclick="openTab(event, 'exponats')">Exhibits</button>
         <button class="tab-button" onclick="openTab(event, 'exhibition_rooms')">Exhibition Rooms</button>
         <button class="tab-button" onclick="openTab(event, 'institutions')">Partner Institutions</button>
+        <button class="tab-button" onclick="openTab(event, 'history')">History</button>
     </div>
 
     <div id="success-message", class="success-message"></div>
@@ -49,20 +50,22 @@
                     <button onclick="editExponat({{exponat|safe}})">Edit</button>
                 </li>
             {% endfor %}
-            <button onclick="displayAddModal('addExponatModal')">Add Exponat</button>
+            <button onclick="displayAddModal('addExponatModal')">Add Exhibit</button>
         </ul>
     </div>
+
 
     <div id="exhibition_rooms" class="tab-content" style="display: none;">
         <h1>Our Exhibition Rooms:</h1>
         <ul>
             {% for room in exhibition_rooms %}
                 <li>
-                    {{room.nazwa_galerii}} 
+                    {{room.nazwa_galerii}}
                     <button onclick="editRoom({{room|safe}})">Edit</button>
-                    <button onclick="openModal({{room.id}}, '{{room.nazwa_galerii}}')">Assign Exponat</button>
+                    <button onclick="openModal({{room.roomid}}, '{{room.nazwa_galerii}}')">Assign Exponat</button>
                 </li>
             {% endfor %}
+            <button onclick="displayAddModal('addRoomModal')">Add Gallery</button>
         </ul>
     </div>
 
@@ -73,9 +76,23 @@
             {% for institution in institutions %}
                 <li>
                     {{institution.nazwa}} - {{institution.miasto}}
+                    <button onclick="editInstitution({{institution|safe}})">Edit</button>
+                    <button onclick="openRentModal({{institution.instid}}, '{{institution.nazwa}}')">Rent an Exhibit</button>
                 </li>
             {% endfor %}
             <button onclick="displayAddModal('addInstitutionModal')">Add Institution</button>
+        </ul>
+    </div>
+
+
+    <div id="history" class="tab-content" style="display: none;">
+        <h1>History:</h1>
+        <ul>
+            {% for record in history %}
+                <li>
+                    {{record}} 
+                </li>
+            {% endfor %}
         </ul>
     </div>
 
@@ -84,8 +101,8 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('editModal')">&times;</span>
             <h2>Edit Artist</h2>
-            <form id="editForm" onsubmit="saveChangesArtist(event)">
-                <input type="hidden" id="artistId" name="id">
+            <form id="editForm" onsubmit="saveEntity(event, 'editForm', '/admin/save_new_artist', 'editModal', 'PUT')">
+                <input type="hidden" id="id" name="id">
                 <label for="imie_nazwisko">Name:</label>
                 <input type="text" id="imie_nazwisko" name="imie_nazwisko" required>
                 <label for="data_urodzenia">Birth Date:</label>
@@ -103,7 +120,7 @@
             <span class="close" onclick="closeModal('addArtistModal')">&times;</span>
             <h2>Add Artist</h2>
             <form id="addArtistForm" onsubmit="saveEntity(event,'addArtistForm', '/admin/save_new_artist', 'addArtistModal', 'POST')">
-                <input type="hidden" id="artistId" name="id">
+                <input type="hidden" id="id" name="id">
                 <label for="imie_nazwisko">Name:</label>
                 <input type="text" id="imie_nazwisko" name="imie_nazwisko" required>
                 <label for="data_urodzenia">Birth Date:</label>
@@ -119,11 +136,23 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('editRoomModal')">&times;</span>
             <h2>Edit Room</h2>
-            <form id="editRoomForm" onsubmit="saveChangesRoom(event)">
-                <input type="hidden" id="roomId" name="id">
+            <form id="editRoomForm" onsubmit="saveEntity(event, 'editRoomForm', '/admin/save_new_gallery', 'editRoomModal', 'PUT')">
+                <input type="hidden" id="roomid" name="roomid">
                 <label for="nazwa_galerii">Room Name:</label>
                 <input type="text" id="nazwa_galerii" name="nazwa_galerii" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
 
+    <div id="addRoomModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addRoomModal')">&times;</span>
+            <h2>Edit Room</h2>
+            <form id="addRoomForm" onsubmit="saveEntity(event, 'addRoomForm', '/admin/save_new_gallery', 'addRoomModal', 'POST')">
+                <input type="hidden" id="roomid" name="roomid">
+                <label for="nazwa_galerii">Room Name:</label>
+                <input type="text" id="nazwa_galerii" name="nazwa_galerii" required>
                 <button type="submit">Save</button>
             </form>
         </div>
@@ -137,12 +166,44 @@
         <button onclick="closeModal('assignModal')">Close</button>
     </div>
 
+
+    <div id="rentModal" class="assignModal">
+        <h2 id="rent-modal-title"></h2>
+        <label for="rent-exponat-select">Select an Exponat:</label>
+        <select id="rent-exponat-select"></select>
+
+        <label for="date_start">Start:</label>
+        <input type="date" id="date_start" name="date_start">
+        <label for="date_end">End:</label>
+        <input type="date" id="date_end" name="date_end">
+
+        <button onclick="rentExponat()">Rent</button>
+        <button onclick="closeModal('rentModal')">Close</button>
+    </div>
+
+
+    <div id="editInstitutionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editInstitutionModal')">&times;</span>
+            <h2>Edit Institution</h2>
+            <form id="editInstitutionForm" onsubmit="saveEntity(event,'editInstitutionForm', '/admin/save_new_institution', 'editInstitutionModal', 'PUT')">
+                <input type="hidden" id="instid" name="instid">
+                <label for="nazwa">Name:</label>
+                <input type="text" id="nazwa" name="nazwa" required>
+                <label for="miasto">City:</label>
+                <input type="text" id="miasto" name="miasto" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+
     <div id="addInstitutionModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal('addInstitutionModal')">&times;</span>
             <h2>Add Institution</h2>
             <form id="addInstitutionForm" onsubmit="saveEntity(event,'addInstitutionForm', '/admin/save_new_institution', 'addInstitutionModal', 'POST')">
-                <input type="hidden" id="artistId" name="id">
+                <input type="hidden" id="instid" name="instid">
                 <label for="nazwa">Name:</label>
                 <input type="text" id="nazwa" name="nazwa" required>
                 <label for="miasto">City:</label>
@@ -157,7 +218,7 @@
             <span class="close" onclick="closeModal('editExponatModal')">&times;</span>
             <h2>Edit Exponat</h2>
             <form id="editExponatForm" onsubmit="saveEntity(event, 'editExponatForm', '/admin/save_new_exponat', 'editExponatModal', 'PUT')">
-                <input type="hidden" id="id" name="id">
+                <input type="hidden" id="expid" name="expid">
                 <label for="tytul">Title:</label>
                 <input type="text" id="tytul" name="tytul" required>
                 <label for="artysta_id">Artist ID:</label>
@@ -172,15 +233,13 @@
             </form>
         </div>
     </div>
-    
-
 
     <div id="addExponatModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal('addExponatModal')">&times;</span>
             <h2>Add Exponat</h2>
             <form id="addExponatForm" onsubmit="saveEntity(event, 'addExponatForm', '/admin/save_new_exponat', 'addExponatModal', 'POST')">
-                <input type="hidden" id="id" name="id">
+                <input type="hidden" id="expId" name="expId">
                 <label for="tytul">Title:</label>
                 <input type="text" id="tytul" name="tytul" required>
                 <label for="artysta_id">Artist ID:</label>

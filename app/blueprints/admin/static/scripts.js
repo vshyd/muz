@@ -4,7 +4,7 @@
 function display_message(message) {
     const successMessage = document.getElementById("success-message");
     successMessage.style.display = "block";
-    successMessage.textContent = message;
+    successMessage.textContent = message + ". Please refresh the page";
     setTimeout(() => {
         successMessage.style.display = "none";
     }, 3000);
@@ -40,17 +40,6 @@ function saveChangesArtist(event) {
     closeModal('editModal');
 }
 
-
-function saveChangesRoom(event) {
-    event.preventDefault();
-
-    const form = document.getElementById("editRoomForm");
-    const formData = new FormData(form);
-    const updatedData = Object.fromEntries(formData.entries());
-
-    closeModal('editRoomModal');
-}
-
 async function openModal(galleryId, galleryName) {
     selectedGalleryId = galleryId;
 
@@ -66,7 +55,7 @@ async function openModal(galleryId, galleryName) {
 
         exponats.forEach(exponat => {
             const option = document.createElement("option");
-            option.value = exponat.id;
+            option.value = exponat.expid;
             option.textContent = exponat.tytul;
             select.appendChild(option);
         });
@@ -103,13 +92,13 @@ async function assignExponat() {
 
 function editExponat(exponat){
     displayAddModal('editExponatModal')
-    const fields = ["id", "tytul", "artysta_id", "wysokosc", "szerokosc", "waga"];
+    const fields = ["expid", "tytul", "artysta_id", "wysokosc", "szerokosc", "waga"];
     assignValuesToEditModal(exponat, fields)
 }
 
 function editRoom(room) {
     displayAddModal("editRoomModal")
-    const fields = ["roomId", "nazwa_galerii"]
+    const fields = ["roomid", "nazwa_galerii"]
     assignValuesToEditModal(room, fields)
 }
 
@@ -117,6 +106,13 @@ function editArtist(artist) {
     displayAddModal('editModal')
     const fields = ["id", "imie_nazwisko", "data_urodzenia", "data_smierci"];
     assignValuesToEditModal(artist, fields)
+}
+
+function editInstitution(institution) {
+    console.log(institution)
+    displayAddModal("editInstitutionModal")
+    const fields = ["instid", "nazwa", "miasto"]
+    assignValuesToEditModal(institution, fields)
 }
 
 
@@ -164,5 +160,62 @@ async function saveEntity(event, formId, endpoint, modalId, method) {
     } catch (error) {
         console.error(`Error saving entity (${formId}):`, error);
         display_message("Failed to save. Please try again.");
+    }
+}
+
+
+async function openRentModal(institutionId, institutionName) {
+    selectedInstitutionId = institutionId;
+
+    document.getElementById("rent-modal-title").innerText = `Rent Exhibit to ${institutionName}`;
+    document.getElementById("rentModal").style.display = "block";
+
+    // Fetch exponats and populate dropdown
+    try {
+        const response = await fetch('/admin/get_rent_exponats');
+        const exponats = await response.json();
+        console.log(exponats)
+        const select = document.getElementById("rent-exponat-select");
+        select.innerHTML = "";
+
+        exponats.forEach(exponat => {
+            const option = document.createElement("option");
+            option.value = exponat.id;
+            option.textContent = exponat.tytul;
+            select.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Error fetching exponats:", error);
+    }
+
+}
+
+
+async function rentExponat() {
+    const exponatId = document.getElementById("rent-exponat-select").value;
+    const dateStart = document.getElementById("date_start").value
+    const dateEnd = document.getElementById("date_end").value
+    
+    try {
+        const response = await fetch('/admin/rent_exponat', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                institution_id: selectedInstitutionId,
+                exponat_id: parseInt(exponatId),
+                date_start: dateStart,
+                date_end: dateEnd
+            })
+        });
+
+        const data = await response.json();
+        display_message(data.message)
+        
+        closeModal('rentModal');
+    } catch (error) {
+        console.error("Error renting exponat:", error);
     }
 }
