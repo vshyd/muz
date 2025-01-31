@@ -32,6 +32,7 @@ CREATE TABLE Historia (
     instytucja_id int  NULL,
     data_pocz date  NOT NULL CHECK (data_pocz > '2025-01-01'),
     data_kon date  NULL CHECK (data_kon > data_pocz OR data_kon is NULL),
+    data_wpisu TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT Historia_pk PRIMARY KEY (id)
 );
 

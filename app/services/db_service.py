@@ -36,6 +36,7 @@ class DBService:
                     szerokosc,
                     waga
                 FROM {self.exponat_table}
+                ORDER BY id
                 """)
         res = self.db.session.execute(SQL)
         exponats = [row._mapping for row in res]
@@ -90,5 +91,29 @@ class DBService:
                 INSERT INTO Instytucja (nazwa, miasto)
                 VALUES (:nazwa, :miasto)
                 """)
+        self.db.session.execute(SQL, query_params)
+        self.db.session.commit()
+
+
+    def save_new_exponat(self, query_params:dict):
+        SQL = text(f"""
+                INSERT INTO Eksponat (tytul, artysta_id, status_wyp, wysokosc, szerokosc, waga)
+                VALUES (:tytul, :artysta_id, :status_wyp, :wysokosc, :szerokosc, :waga)
+                """)
+        self.db.session.execute(SQL, query_params)
+        self.db.session.commit()
+
+    
+    def update_exponat(self, query_params:dict):
+        SQL = text("""
+            UPDATE Eksponat
+            SET tytul = :tytul,
+                artysta_id = :artysta_id,
+                status_wyp = :status_wyp,
+                wysokosc = :wysokosc,
+                szerokosc = :szerokosc,
+                waga = :waga
+            WHERE id = :id
+            """)
         self.db.session.execute(SQL, query_params)
         self.db.session.commit()

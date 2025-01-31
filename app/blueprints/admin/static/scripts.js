@@ -24,47 +24,6 @@ function openTab(event, tabId) {
     event.currentTarget.classList.add("active");
 }
 
-function editArtist(artist) {
-
-    const modal = document.getElementById("editModal");
-    modal.style.display = "block";
-
-    document.getElementById("artistId").value = artist.id;
-    document.getElementById("imie_nazwisko").value = artist.imie_nazwisko;
-    document.getElementById("data_urodzenia").value = artist.data_urodzenia;
-    document.getElementById("data_smierci").value = artist.data_smierci || '';
-}
-
-async function saveArtist(event) {
-    event.preventDefault();
-
-    const form = document.getElementById("addArtistForm");
-    const formData = new FormData(form);
-    dataArtist = Object.fromEntries(formData.entries());
-
-    try {
-        const response = await fetch('/admin/save_new_artist', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                artist: dataArtist
-            })
-        });
-
-        const data = await response.json();
-        display_message(data.message)
-        closeModal('addArtistModal');
-        location.reload()
-    } catch (error) {
-        console.error("Error Adding new Artist:", error);
-    }
-
-    
-}
-
-
 function closeModal(id) {
     const modal = document.getElementById(id);
     modal.style.display = "none";
@@ -91,17 +50,6 @@ function saveChangesRoom(event) {
 
     closeModal('editRoomModal');
 }
-
-
-function editRoom(room) {
-
-    const modal = document.getElementById("editRoomModal");
-    modal.style.display = "block";
-
-    document.getElementById("roomId").value = room.id;
-    document.getElementById("room_name").value = room.nazwa_galerii;
-}
-
 
 async function openModal(galleryId, galleryName) {
     selectedGalleryId = galleryId;
@@ -153,6 +101,33 @@ async function assignExponat() {
     }
 }
 
+function editExponat(exponat){
+    displayAddModal('editExponatModal')
+    const fields = ["id", "tytul", "artysta_id", "wysokosc", "szerokosc", "waga"];
+    assignValuesToEditModal(exponat, fields)
+}
+
+function editRoom(room) {
+    displayAddModal("editRoomModal")
+    const fields = ["roomId", "nazwa_galerii"]
+    assignValuesToEditModal(room, fields)
+}
+
+function editArtist(artist) {
+    displayAddModal('editModal')
+    const fields = ["id", "imie_nazwisko", "data_urodzenia", "data_smierci"];
+    assignValuesToEditModal(artist, fields)
+}
+
+
+function assignValuesToEditModal(obj, fields){
+    fields.forEach((field) => {
+        const input = document.getElementById(field);
+        if (input) {
+            input.value = obj[field] || "";
+        }
+    });
+}
 
 function displayAddModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -160,29 +135,34 @@ function displayAddModal(modalId) {
 }
 
 
-async function saveInstitution(event) {
+async function saveEntity(event, formId, endpoint, modalId, method) {
     event.preventDefault();
 
-    const form = document.getElementById("addInstitutionForm");
+    const form = document.getElementById(formId);
+    if (!form) {
+        console.error(`Form with ID '${formId}' not found.`);
+        return;
+    }
+
     const formData = new FormData(form);
-    dataInstitution = Object.fromEntries(formData.entries());
+    const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('/admin/save_new_institution', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                institution: dataInstitution
-            })
+        const response = await fetch(endpoint, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
         });
 
-        const data = await response.json();
-        display_message(data.message)
-        closeModal('addInstitutionModal');
-        location.reload()
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        display_message(result.message);
+        closeModal(modalId);
     } catch (error) {
-        console.error("Error Adding new Institution:", error);
+        console.error(`Error saving entity (${formId}):`, error);
+        display_message("Failed to save. Please try again.");
     }
 }

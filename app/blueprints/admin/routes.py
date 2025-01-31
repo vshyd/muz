@@ -46,3 +46,15 @@ def save_new_institution():
     data = request.json
     response = admin_service.save_new_institution(data)
     return response
+
+
+@admin_bp.route('/save_new_exponat', methods=['POST', 'PUT'])
+def save_new_exponat():
+
+    if request.method == 'POST':
+        data = request.json
+        response = admin_service.save_new_exponat(data)
+    else:
+        data = request.json
+        response = admin_service.update_exponat(data)
+    return response

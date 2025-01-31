@@ -45,9 +45,11 @@
         <ul>
             {% for exponat in exponats %}
                 <li>
-                    {{exponat.tytul}}
+                    {{exponat.tytul}} 
+                    <button onclick="editExponat({{exponat|safe}})">Edit</button>
                 </li>
             {% endfor %}
+            <button onclick="displayAddModal('addExponatModal')">Add Exponat</button>
         </ul>
     </div>
 
@@ -100,7 +102,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('addArtistModal')">&times;</span>
             <h2>Add Artist</h2>
-            <form id="addArtistForm" onsubmit="saveArtist(event)">
+            <form id="addArtistForm" onsubmit="saveEntity(event,'addArtistForm', '/admin/save_new_artist', 'addArtistModal', 'POST')">
                 <input type="hidden" id="artistId" name="id">
                 <label for="imie_nazwisko">Name:</label>
                 <input type="text" id="imie_nazwisko" name="imie_nazwisko" required>
@@ -119,8 +121,8 @@
             <h2>Edit Room</h2>
             <form id="editRoomForm" onsubmit="saveChangesRoom(event)">
                 <input type="hidden" id="roomId" name="id">
-                <label for="room_name">Room Name:</label>
-                <input type="text" id="room_name" name="nazwa_galerii" required>
+                <label for="nazwa_galerii">Room Name:</label>
+                <input type="text" id="nazwa_galerii" name="nazwa_galerii" required>
 
                 <button type="submit">Save</button>
             </form>
@@ -139,7 +141,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('addInstitutionModal')">&times;</span>
             <h2>Add Institution</h2>
-            <form id="addInstitutionForm" onsubmit="saveInstitution(event)">
+            <form id="addInstitutionForm" onsubmit="saveEntity(event,'addInstitutionForm', '/admin/save_new_institution', 'addInstitutionModal', 'POST')">
                 <input type="hidden" id="artistId" name="id">
                 <label for="nazwa">Name:</label>
                 <input type="text" id="nazwa" name="nazwa" required>
@@ -150,6 +152,48 @@
         </div>
     </div>
 
+    <div id="editExponatModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editExponatModal')">&times;</span>
+            <h2>Edit Exponat</h2>
+            <form id="editExponatForm" onsubmit="saveEntity(event, 'editExponatForm', '/admin/save_new_exponat', 'editExponatModal', 'PUT')">
+                <input type="hidden" id="id" name="id">
+                <label for="tytul">Title:</label>
+                <input type="text" id="tytul" name="tytul" required>
+                <label for="artysta_id">Artist ID:</label>
+                <input type="number" id="artysta_id" name="artysta_id" required>
+                <label for="wysokosc">Height (cm):</label>
+                <input type="number" id="wysokosc" name="wysokosc" step="0.01" min="0.01" required>
+                <label for="szerokosc">Width (cm):</label>
+                <input type="number" id="szerokosc" name="szerokosc" step="0.01" min="0.01" required>
+                <label for="waga">Weight (kg):</label>
+                <input type="number" id="waga" name="waga" step="0.01" min="0.01" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    
 
+
+    <div id="addExponatModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addExponatModal')">&times;</span>
+            <h2>Add Exponat</h2>
+            <form id="addExponatForm" onsubmit="saveEntity(event, 'addExponatForm', '/admin/save_new_exponat', 'addExponatModal', 'POST')">
+                <input type="hidden" id="id" name="id">
+                <label for="tytul">Title:</label>
+                <input type="text" id="tytul" name="tytul" required>
+                <label for="artysta_id">Artist ID:</label>
+                <input type="number" id="artysta_id" name="artysta_id" required>
+                <label for="wysokosc">Height (cm):</label>
+                <input type="number" id="wysokosc" name="wysokosc" step="0.01" min="0.01" required>
+                <label for="szerokosc">Width (cm):</label>
+                <input type="number" id="szerokosc" name="szerokosc" step="0.01" min="0.01" required>
+                <label for="waga">Weight (kg):</label>
+                <input type="number" id="waga" name="waga" step="0.01" min="0.01" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
     <script src="{{ url_for('admin.static', filename='scripts.js') }}"></script>
 {% endblock %}
