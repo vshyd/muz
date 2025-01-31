@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="institutions" class="tab-content">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for institution in institutions %}
+            <tr>
+                <td>{{ institution.nazwa }}</td>
+                <td>{{ institution.miasto }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

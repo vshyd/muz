@@ -26,7 +26,7 @@ def index():
 
 @admin_bp.route('/get_exponats')
 def get_exponats():
-    return jsonify([dict(exponat) for exponat in admin_service.get_exponats()])
+    return jsonify([dict(exponat) for exponat in admin_service.get_assign_exponats()])
 
 @admin_bp.route('/get_rent_exponats')
 def get_exponats_rent():

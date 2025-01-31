@@ -1,8 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Artists</h2>
-
-<h1>Items List</h1>
-
+<div id="artists" class="tab-content">
+    <h1>Our Artists:</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Birth Date</th>
+                <th>Death Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artist in artists %}
+            <tr>
+                <td>{{ artist.imie_nazwisko }}</td>
+                <td>{{ artist.data_urodzenia if artist.data_urodzenia else "Unknown" }}</td>
+                <td>{{ artist.data_smierci if artist.data_smierci else "Present" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

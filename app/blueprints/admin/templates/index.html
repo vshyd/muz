@@ -25,75 +25,134 @@
     <!-- Artists tab -->
     <div id="artists" class="tab-content">
         <h1>Our Artists:</h1>
-        <ul>
-            {% for artist in artists %}
-                <li>
-                    {{artist.imie_nazwisko}} 
-                    ({{artist.data_urodzenia if artist.data_urodzenia else "Unknown"}} - 
-                    {{artist.data_smierci if artist.data_smierci else "Present" }})
-                    
-                    <!-- Edit button -->
-                    <button onclick="editArtist({{artist|safe}})">Edit</button>
-                </li>
-            {% endfor %}
-            <button onclick="displayAddModal('addArtistModal')">Add Artist</button>
-        </ul>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Birth Date</th>
+                    <th>Death Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for artist in artists %}
+                <tr>
+                    <td>{{ artist.imie_nazwisko }}</td>
+                    <td>{{ artist.data_urodzenia if artist.data_urodzenia else "Unknown" }}</td>
+                    <td>{{ artist.data_smierci if artist.data_smierci else "Present" }}</td>
+                    <td>
+                        <button onclick="editArtist({{ artist|safe }})">Edit</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="displayAddModal('addArtistModal')">Add Artist</button>
     </div>
 
 
     <div id="exponats" class="tab-content" style="display: none;">
-        <h1>Our Exponats:</h1>
-        <ul>
-            {% for exponat in exponats %}
-                <li>
-                    {{exponat.tytul}} 
-                    <button onclick="editExponat({{exponat|safe}})">Edit</button>
-                </li>
-            {% endfor %}
-            <button onclick="displayAddModal('addExponatModal')">Add Exhibit</button>
-        </ul>
+        <h1>Our Exhibits:</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Artist ID</th>
+                    <th>Height(cm)</th>
+                    <th>Width(cm)</th>
+                    <th>Weight(kg)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exponat in exponats %}
+                <tr>
+                    <td>{{ exponat.tytul }}</td>
+                    <td>{{ exponat.artysta_id }}</td>
+                    <td>{{ exponat.wysokosc }}</td>
+                    <td>{{ exponat.szerokosc }}</td>
+                    <td>{{ exponat.waga }}</td>
+                    <td>
+                        <button onclick="editExponat({{ exponat|safe }})">Edit</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="displayAddModal('addExponatModal')">Add Exhibit</button>
     </div>
 
 
     <div id="exhibition_rooms" class="tab-content" style="display: none;">
         <h1>Our Exhibition Rooms:</h1>
-        <ul>
+        <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for room in exhibition_rooms %}
-                <li>
-                    {{room.nazwa_galerii}}
-                    <button onclick="editRoom({{room|safe}})">Edit</button>
-                    <button onclick="openModal({{room.roomid}}, '{{room.nazwa_galerii}}')">Assign Exponat</button>
-                </li>
+            <tr>
+                <td>{{ room.nazwa_galerii }}</td>
+                <td>
+                    <button onclick="editRoom({{ room|safe }})">Edit</button>
+                    <button onclick="openModal({{ room.roomid }}, '{{ room.nazwa_galerii }}')">Assign Exponat</button>
+                </td>
+            </tr>
             {% endfor %}
+        </tbody>
+        </table>
             <button onclick="displayAddModal('addRoomModal')">Add Gallery</button>
         </ul>
     </div>
 
 
     <div id="institutions" class="tab-content" style="display: none;">
-        <h1>Our Partner Institutions:</h1>
-        <ul>
-            {% for institution in institutions %}
-                <li>
-                    {{institution.nazwa}} - {{institution.miasto}}
-                    <button onclick="editInstitution({{institution|safe}})">Edit</button>
-                    <button onclick="openRentModal({{institution.instid}}, '{{institution.nazwa}}')">Rent an Exhibit</button>
-                </li>
-            {% endfor %}
-            <button onclick="displayAddModal('addInstitutionModal')">Add Institution</button>
-        </ul>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for institution in institutions %}
+                <tr>
+                    <td>{{ institution.nazwa }}</td>
+                    <td>{{ institution.miasto }}</td>
+                    <td>
+                        <button onclick="editInstitution({{ institution|safe }})">Edit</button>
+                        <button onclick="openRentModal({{ institution.instid }}, '{{ institution.nazwa }}')">Rent an Exhibit</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="displayAddModal('addInstitutionModal')">Add Institution</button>
     </div>
 
 
     <div id="history" class="tab-content" style="display: none;">
         <h1>History:</h1>
-        <ul>
-            {% for record in history %}
-                <li>
-                    {{record}} 
-                </li>
-            {% endfor %}
-        </ul>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Record ID</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in history %}
+                <tr>
+                    <td>{{ record.record_id }}</td>
+                    <td>{{ record.action }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- edit artist modal -->
@@ -173,9 +232,9 @@
         <select id="rent-exponat-select"></select>
 
         <label for="date_start">Start:</label>
-        <input type="date" id="date_start" name="date_start">
+        <input type="date" id="date_start" name="date_start" required>
         <label for="date_end">End:</label>
-        <input type="date" id="date_end" name="date_end">
+        <input type="date" id="date_end" name="date_end" required>
 
         <button onclick="rentExponat()">Rent</button>
         <button onclick="closeModal('rentModal')">Close</button>

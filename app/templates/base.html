@@ -16,7 +16,12 @@
                 <ul class="nav-links">
                     <li><a href="{{ url_for('main.index') }}" class="{% if request.path == url_for('main.index') %}active{% endif %}">Home</a></li>
                     <li><a href="{{ url_for('main.artists') }}" class="{% if request.path == url_for('main.artists') %}active{% endif %}">Artists</a></li>
+                    <li><a href="{{ url_for('main.exhibits') }}" class="{% if request.path == url_for('main.exhibits') %}active{% endif %}">Exhibits</a></li>
+                    <li><a href="{{ url_for('main.exhibition_rooms') }}" class="{% if request.path == url_for('main.exhibition_rooms') %}active{% endif %}">Exhibition Rooms</a></li>
+                    <li><a href="{{ url_for('main.partners') }}" class="{% if request.path == url_for('main.partners') %}active{% endif %}">Partner Institutions</a></li>
+                    {% if current_user %}
                     <li><a href="{{ url_for('admin.index') }}" class="{% if request.path == url_for('admin.index') %}active{% endif %}">Admin</a></li>
+                    {% endif %}
                 </ul>
                 
                 <div class="auth-links">

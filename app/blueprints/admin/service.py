@@ -1,7 +1,7 @@
+import psycopg2
 from ...services.db_service import DBService
 import random
 import datetime
-
 class AdminService:
 
     def __init__(self) -> None:
@@ -229,13 +229,16 @@ class AdminService:
         try:
             self.db_service.add_record_to_history(params)
             self.db_service.set_to_non_avaiable_exponat(exponat_id)
-            message = "Exponat was rented successfuly"
+            message = "Exhibit was rented successfuly"
         except Exception as e:
-            message = str(e)
-            print(message)
+            message = "Exhibit cannot be outside of museum for more than 30 days in a year."
         
         return {'message':message}
+    
 
+    def get_assign_exponats(self):
+        return self.db_service.get_assign_exponats()
+            
 
     def get_rent_exponats(self) -> dict:
         return self.db_service.get_rent_exponats()

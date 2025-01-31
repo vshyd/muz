@@ -44,6 +44,25 @@ class DBService:
         return exponats
     
 
+    def get_assign_exponats(self) -> list:
+        SQL = text(f"""
+                SELECT
+                    id as expid, 
+                    tytul, 
+                    artysta_id,
+                    status_wyp,
+                    wysokosc, 
+                    szerokosc,
+                    waga
+                FROM {self.exponat_table}
+                where status_wyp = False
+                ORDER BY id
+                """)
+        res = self.db.session.execute(SQL)
+        exponats = [row._mapping for row in res]
+        return exponats
+    
+
     def get_all_exhibition_rooms(self) -> list:
         SQL = text(f"""
                 SELECT
@@ -96,6 +115,7 @@ class DBService:
                 """)
         self.db.session.execute(SQL, query_params)
         self.db.session.commit()
+
 
     def set_to_non_avaiable_exponat(self, exp_id):
         SQL = text(f"""

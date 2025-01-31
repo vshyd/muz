@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="exhibition_rooms" class="tab-content">
+    <h1>Our Exhibition Rooms:</h1>
+    <table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in exhibition_rooms %}
+        <tr>
+            <td>{{ room.nazwa_galerii }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+{% endblock %}
