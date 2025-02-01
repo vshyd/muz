@@ -3,12 +3,15 @@ from .extensions import db
 from .blueprints.main import main_bp
 from .blueprints.admin import admin_bp
 from .blueprints.auth import auth_bp
+from dotenv import load_dotenv
+import os 
+
 
 def create_app():
     app = Flask(__name__)
-
+    load_dotenv()
     # Конфигурация приложения
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://vshyd@localhost:5432/museum_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = 'dev'
 
