@@ -47,9 +47,9 @@ class AdminService:
     def _create_history_record(self, record:dict) -> dict:
         res = {'record_id':record['record_id']}
         if record['institution']:
-            res['action'] = f'{record['exhibit']} rented to {record['institution']} from {record['date_start']} to {record['date_end']} on {record['date_at']}'
+            res['action'] = f"{record['exhibit']} rented to {record['institution']} from {record['date_start']} to {record['date_end']} on {record['date_at']}"
         elif record['gallery']:
-            res['action'] = f'{record['exhibit']} moved to {record['gallery']} on {record['date_at']}'
+            res['action'] = f"{record['exhibit']} moved to {record['gallery']} on {record['date_at']}"
         return res
                 
 
