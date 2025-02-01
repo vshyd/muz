@@ -28,6 +28,7 @@
         <table border="1">
             <thead>
                 <tr>
+                    <th>Artist ID</th> 
                     <th>Name</th>
                     <th>Birth Date</th>
                     <th>Death Date</th>
@@ -37,6 +38,7 @@
             <tbody>
                 {% for artist in artists %}
                 <tr>
+                    <td>{{ artist.id }}</td>
                     <td>{{ artist.imie_nazwisko }}</td>
                     <td>{{ artist.data_urodzenia if artist.data_urodzenia else "Unknown" }}</td>
                     <td>{{ artist.data_smierci if artist.data_smierci else "Present" }}</td>

@@ -18,7 +18,7 @@ def artists():
 
 @main_bp.route('/exhibits')
 def exhibits():
-    return render_template('exhibits.html', exponats=admin_service.get_exponats())
+    return render_template('exhibits.html', exponats=admin_service.get_all_exponats_for_users())
 
 @main_bp.route('/exhibition_rooms')
 def exhibition_rooms():

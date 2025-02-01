@@ -236,6 +236,10 @@ class AdminService:
         return {'message':message}
     
 
+    def get_all_exponats_for_users(self) -> dict:
+        return self.db_service.get_all_exponats_for_users()
+
+
     def get_assign_exponats(self):
         return self.db_service.get_assign_exponats()
             

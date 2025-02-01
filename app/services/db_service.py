@@ -20,6 +20,7 @@ class DBService:
                     data_urodzenia, 
                     data_smierci 
                 FROM {self.artist_table}
+                order by id
                 """)
         res = self.db.session.execute(SQL)
         artists = [row._mapping for row in res]
@@ -42,6 +43,26 @@ class DBService:
         res = self.db.session.execute(SQL)
         exponats = [row._mapping for row in res]
         return exponats
+
+
+    def get_all_exponats_for_users(self) -> list:
+        SQL = text(f"""
+                SELECT
+                    e.id as expid, 
+                    e.tytul, 
+                    a.imie_nazwisko as artysta_nazwisko,
+                    e.status_wyp,
+                    e.wysokosc, 
+                    e.szerokosc,
+                    e.waga
+                FROM {self.exponat_table} e
+                join {self.artist_table} a on a.id = e.artysta_id
+                ORDER BY e.id
+                """)
+        res = self.db.session.execute(SQL)
+        exponats = [row._mapping for row in res]
+        return exponats
+
     
 
     def get_assign_exponats(self) -> list:
